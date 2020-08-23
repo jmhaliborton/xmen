@@ -28,7 +28,9 @@ el cual recibe un array de String  os cuales representan una fila de una tabla d
  Esta url mostrara el mensaje "Servicio ACTIVO"
  
  ## Métodos de la API
- _Todos los métodos comparten la misma base de url "http://localhost:8080/xmen/magneto"
+ _Todos los métodos comparten la misma base de url "http://localhost:8080/xmen/magneto". Para realizar pruebas se puede utilizar cualquier cliente como [POSTMAN](https://www.postman.com/) o [SOAP-UI](https://www.soapui.org/)
+ 
+ 
  
  ### /mutant
  Método POST que recibe un JSON con una array de String y retorna si para dicha cadena corresponde reclutar al mutante o no.

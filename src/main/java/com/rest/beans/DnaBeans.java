@@ -9,16 +9,12 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-//@Entity
-//@Table(name="t_dna")
-@XmlRootElement
+
+//@XmlRootElement
 public class DnaBeans 
 {
-	@XmlElement
-	
-//	@Column(name="dna")
+//	@XmlElement(name = "dna")
 	private List<String> dna;
-//	@Column(name="is_mutant")
 	private boolean mutante = false;
 
 	
@@ -28,9 +24,9 @@ public class DnaBeans
 	}
 
 	
-	public void setDna(List<String> dna)
+	public void setDna(List<String> dnaL)
 	{
-		this.dna = dna;
+		this.dna = dnaL;
 	}
 
 

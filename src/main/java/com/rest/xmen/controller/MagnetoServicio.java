@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.jws.WebService;
 import javax.persistence.Access;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
@@ -24,10 +25,16 @@ import com.rest.dao.StatsDao;
 import com.rest.dao.mutanteDao;
 
 
-
 @Path("/magneto")
 public class MagnetoServicio 
 {
+
+	public MagnetoServicio()
+	{
+		super();
+		
+	}
+
 	@Autowired
 	private mutanteDao  mutante  = null;
 	@Autowired
@@ -37,7 +44,7 @@ public class MagnetoServicio
 	@Path("/mutant")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response  validarDNA (DnaBeans dna){
+	public Response  validarDNA (DnaBeans dnaB){
 		
 		mutante = new mutanteDao();
 		statsDao = new StatsDao();
@@ -45,9 +52,9 @@ public class MagnetoServicio
 		String resp="";
 		int Status= 0;
 		Boolean isMutante = false;
-		if(mutante.validarFormato(dna)){
-		mutante.validarMutante(dna);
-		if(dna.isMutante()){
+		if(mutante.validarFormato(dnaB)){
+			DnaBeans result	= mutante.validarMutante(dnaB);
+		if(result.isMutante()){
 			Status = 200;
 			resp ="Para reclutar";
 		}
@@ -55,7 +62,7 @@ public class MagnetoServicio
 		Status = 403;
 		resp ="Inservible";
 		}
-		statsDao.saveStats(dna);
+		statsDao.saveStats(result);
 		}
 		else{
 		Status= 400;

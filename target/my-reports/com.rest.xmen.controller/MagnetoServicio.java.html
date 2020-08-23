@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MagnetoServicio.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">xmen</a> &gt; <a href="index.source.html" class="el_package">com.rest.xmen.controller</a> &gt; <span class="el_source">MagnetoServicio.java</span></div><h1>MagnetoServicio.java</h1><pre class="source lang-java linenums">package com.rest.xmen.controller;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.Access;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.rest.beans.DnaBeans;
+import com.rest.dao.StatsDao;
+import com.rest.dao.mutanteDao;
+
+
+
+@Path(&quot;/magneto&quot;)
+public class MagnetoServicio 
+{
+
+	public MagnetoServicio()
+	{
+<span class="fc" id="L34">		super();</span>
+		
+<span class="fc" id="L36">	}</span>
+
+	@Autowired
+<span class="fc" id="L39">	private mutanteDao  mutante  = null;</span>
+	@Autowired
+<span class="fc" id="L41">	private StatsDao statsDao = null;</span>
+	
+	@POST
+	@Path(&quot;/mutant&quot;)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response  validarDNA (DnaBeans dna){
+		
+<span class="fc" id="L49">		mutante = new mutanteDao();</span>
+<span class="fc" id="L50">		statsDao = new StatsDao();</span>
+<span class="fc" id="L51">		JSONObject js = new JSONObject();</span>
+<span class="fc" id="L52">		String resp=&quot;&quot;;</span>
+<span class="fc" id="L53">		int Status= 0;</span>
+<span class="fc" id="L54">		Boolean isMutante = false;</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">		if(mutante.validarFormato(dna)){</span>
+<span class="fc" id="L56">		mutante.validarMutante(dna);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		if(dna.isMutante()){</span>
+<span class="fc" id="L58">			Status = 200;</span>
+<span class="fc" id="L59">			resp =&quot;Para reclutar&quot;;</span>
+<span class="fc" id="L60">		}</span>
+		else{
+<span class="fc" id="L62">		Status = 403;</span>
+<span class="fc" id="L63">		resp =&quot;Inservible&quot;;</span>
+		}
+<span class="fc" id="L65">		statsDao.saveStats(dna);</span>
+<span class="fc" id="L66">		}</span>
+		else{
+<span class="fc" id="L68">		Status= 400;</span>
+<span class="fc" id="L69">		resp=&quot;Formato del JSON enviado no es valido&quot;;</span>
+		}
+		
+		
+		
+		
+<span class="fc" id="L75">		js.put(&quot;info&quot;, resp);</span>
+<span class="fc" id="L76">		return Response.status(Status).entity(resp).build();</span>
+		} 
+		
+
+	@GET
+	@Path(&quot;/stats&quot;)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response  getStats(){
+<span class="fc" id="L84">		statsDao = new StatsDao();</span>
+<span class="fc" id="L85">		JSONObject js = new JSONObject();</span>
+<span class="fc" id="L86">		js = statsDao.getStats();</span>
+		
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">		if(js.isEmpty())</span>
+<span class="nc" id="L89">		return Response.ok(&quot;Aún no se validaron cadenas de DNA&quot;).build();</span>
+		else
+<span class="fc" id="L91">		return Response.ok(js).build();</span>
+		
+	}
+	
+	@GET
+	@Path(&quot;/info&quot;)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response  getinfo(){
+		
+<span class="fc" id="L100">		return Response.ok(&quot;Servicio ACTIVO&quot;).build();</span>
+		
+		
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

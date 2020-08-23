@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatsDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">xmen</a> &gt; <a href="index.source.html" class="el_package">com.rest.dao</a> &gt; <span class="el_source">StatsDao.java</span></div><h1>StatsDao.java</h1><pre class="source lang-java linenums">package com.rest.dao;
+
+import com.rest.beans.DnaBeans;
+import java.sql.*;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.json.simple.JSONObject;
+<span class="fc" id="L10">public class StatsDao</span>
+{
+	public void saveStats (DnaBeans dna){
+	try
+	{
+<span class="fc" id="L15">		Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span>
+<span class="fc" id="L16">		Connection con = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/xmendb?serverTimezone=UTC&quot;, &quot;root&quot;, &quot;&quot;);</span>
+		
+<span class="fc" id="L18">		String sql = &quot;insert into t_dna (dna_cadena,mutante) values (?,?)&quot;;</span>
+<span class="fc" id="L19">		PreparedStatement ps = con.prepareStatement(sql);</span>
+<span class="fc" id="L20">		String cadena = dna.getDna().stream().map(n -&gt; String.valueOf(n)).collect(Collectors.joining(&quot;,&quot;));</span>
+<span class="fc" id="L21">		ps.setString(1, cadena);</span>
+<span class="fc" id="L22">		ps.setBoolean(2, dna.isMutante());</span>
+<span class="fc" id="L23">		ps.execute();</span>
+<span class="fc" id="L24">		con.close();</span>
+<span class="fc" id="L25">	}</span>
+<span class="nc" id="L26">	catch (Exception e)</span>
+	{
+		// TODO Auto-generated catch block
+<span class="nc" id="L29">		System.out.println(e.getMessage());</span>
+//		e.printStackTrace();
+	}
+	
+<span class="fc" id="L33">	} </span>
+	
+	public JSONObject getStats(){
+<span class="fc" id="L36">	JSONObject json = new JSONObject();</span>
+		try
+		{
+<span class="fc" id="L39">			Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span>
+<span class="fc" id="L40">			Connection con = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/xmendb?serverTimezone=UTC&quot;, &quot;root&quot;, &quot;&quot;);</span>
+			
+<span class="fc" id="L42">			String sql = &quot;select \r\n&quot; + </span>
+					&quot;(select count(mutante) from t_dna where mutante = 1) as mutant,\r\n&quot; + 
+					&quot;(select count(mutante) from t_dna where mutante = 0) as human&quot;;
+<span class="fc" id="L45">			Statement s = con.createStatement();</span>
+<span class="fc" id="L46">			ResultSet result = s.executeQuery(sql);</span>
+			
+<span class="fc bfc" id="L48" title="All 2 branches covered.">			while (result.next())</span>
+			{
+<span class="fc" id="L50">				json.put(&quot;count_mutant_dna&quot;, result.getString(&quot;mutant&quot;));</span>
+<span class="fc" id="L51">				json.put(&quot;count_human_dna&quot;, result.getString(&quot;human&quot;));</span>
+<span class="fc" id="L52">				Integer m = new Integer(result.getString(&quot;mutant&quot;).toString());</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">				Integer h = new Integer((result.getString(&quot;human&quot;).toString().equals(&quot;0&quot;)) ? &quot;1&quot; : result.getString(&quot;human&quot;).toString());</span>
+			
+<span class="fc" id="L55">				json.put(&quot;ratio&quot;, m/h );</span>
+			}
+			
+			
+<span class="fc" id="L59">			con.close();	</span>
+<span class="fc" id="L60">		}</span>
+<span class="nc" id="L61">		catch (Exception e)</span>
+		{
+			// TODO Auto-generated catch block
+<span class="nc" id="L64">			System.out.println(e.getMessage());</span>
+//			e.printStackTrace();
+		}
+<span class="fc" id="L67">		return json;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

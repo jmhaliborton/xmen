@@ -70,7 +70,7 @@ public class MagnetoServicio
 		}
 		
 		
-		
+		/*prueba modificacion*/
 		
 		js.put("info", resp);
 		return Response.status(Status).entity(resp).build();

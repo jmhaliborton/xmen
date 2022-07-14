@@ -34,7 +34,7 @@ public class MagnetoServicio
 		super();
 		
 	}
-
+/* prieba  */
 	@Autowired
 	private mutanteDao  mutante  = null;
 	@Autowired
